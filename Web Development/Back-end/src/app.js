@@ -10,6 +10,7 @@ import {
   notFoundHandler,
   globalErrorHandler,
 } from "./middlewares/errorMiddleware.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/predictions", predictionRoutes);
 app.use("/api/metadata", metadataRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
