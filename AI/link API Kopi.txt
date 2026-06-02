@@ -1,0 +1,5 @@
+link API Kopi
+
+https://ddps2603-coffee-health-api.hf.space/docs
+https://ddps2603-coffee-health-api.hf.space/health
+https://ddps2603-coffee-health-api.hf.space/predict
