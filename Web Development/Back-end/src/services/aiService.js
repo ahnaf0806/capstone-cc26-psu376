@@ -236,3 +236,4 @@ export const predictHealthRisk = async (input) => {
     return fallbackPrediction(input);
   }
 };
+
