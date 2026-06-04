@@ -268,6 +268,69 @@ export default function ResultPage() {
   const [sleep, setSleep] = useState(65);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [extraCaffeine, setExtraCaffeine] = useState(0); // tambahan dari modal "Catat Konsumsi"
+  const [loggedDrinks, setLoggedDrinks] = useState([
+    {
+      id: "espresso_double",
+      name: "Espresso (Double)",
+      icon: "☕",
+      color: "#553722",
+      bg: "rgba(85,55,34,0.1)",
+      border: "rgba(85,55,34,0.2)",
+      count: 1
+    },
+    {
+      id: "matcha_latte",
+      name: "Matcha Latte",
+      icon: "🍵",
+      color: "#1b6d24",
+      bg: "rgba(27,109,36,0.1)",
+      border: "rgba(27,109,36,0.2)",
+      count: 1
+    },
+    {
+      id: "coldbrew_init",
+      name: "Cold Brew",
+      icon: "🧊",
+      color: "#57361c",
+      bg: "rgba(87,54,28,0.1)",
+      border: "rgba(87,54,28,0.2)",
+      count: 1
+    }
+  ]);
+
+  const handleSaveCaffeine = (caffeineAmount, drinkId, qty) => {
+    setExtraCaffeine((prev) => prev + caffeineAmount);
+    
+    const beverageList = [
+      { id: "espresso", name: "Espresso", icon: "☕", color: "#553722", bg: "rgba(85,55,34,0.1)", border: "rgba(85,55,34,0.2)" },
+      { id: "instan", name: "Kopi Instan", icon: "☕", color: "#553722", bg: "rgba(85,55,34,0.1)", border: "rgba(85,55,34,0.2)" },
+      { id: "latte", name: "Latte/Cappucino", icon: "🥛", color: "#57361c", bg: "rgba(87,54,28,0.1)", border: "rgba(87,54,28,0.2)" },
+      { id: "coldbrew", name: "Cold Brew", icon: "🧊", color: "#57361c", bg: "rgba(87,54,28,0.1)", border: "rgba(87,54,28,0.2)" }
+    ];
+    
+    const selected = beverageList.find(b => b.id === drinkId);
+    if (selected) {
+      setLoggedDrinks((prev) => {
+        const existingIndex = prev.findIndex(item => item.name.toLowerCase() === selected.name.toLowerCase());
+        if (existingIndex > -1) {
+          const updated = [...prev];
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            count: updated[existingIndex].count + qty
+          };
+          return updated;
+        } else {
+          return [
+            ...prev,
+            {
+              ...selected,
+              count: qty
+            }
+          ];
+        }
+      });
+    }
+  };
 
   // Fetch prediksi terakhir kalau halaman di-refresh (Opsi B)
   useEffect(() => {
@@ -535,6 +598,7 @@ export default function ResultPage() {
               setSleep={setSleep}
               totalCaffeine={totalCaffeine}
               setIsModalOpen={setIsModalOpen}
+              loggedDrinks={loggedDrinks}
             />
           </main>
         </div>
@@ -586,8 +650,8 @@ export default function ResultPage() {
       {isModalOpen && (
         <CaffeineModal
           onClose={() => setIsModalOpen(false)}
-          onSave={(newCaffeine) =>
-            setExtraCaffeine((prev) => prev + newCaffeine)
+          onSave={(newCaffeine, drinkId, qty) =>
+            handleSaveCaffeine(newCaffeine, drinkId, qty)
           }
         />
       )}
@@ -605,6 +669,7 @@ function PageContent({
   setSleep,
   totalCaffeine,
   setIsModalOpen,
+  loggedDrinks,
 }) {
   // Derived UI labels (yang dulu di parent, dipindah sini supaya update saat slider bergerak)
   const hydrationVal = (1.5 + (hydration / 100) * 2.5).toFixed(1);
@@ -1214,48 +1279,29 @@ function PageContent({
           SUMBER TERDETEKSI
         </div>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          {[
-            {
-              label: "Espresso (Double)",
-              color: "#553722",
-              bg: "rgba(85,55,34,0.1)",
-              border: "rgba(85,55,34,0.2)",
-              icon: "☕",
-            },
-            {
-              label: "Matcha Latte",
-              color: "#1b6d24",
-              bg: "rgba(27,109,36,0.1)",
-              border: "rgba(27,109,36,0.2)",
-              icon: "🍵",
-            },
-            {
-              label: "Cold Brew",
-              color: "#57361c",
-              bg: "rgba(87,54,28,0.1)",
-              border: "rgba(87,54,28,0.2)",
-              icon: "🧊",
-            },
-          ].map(({ label, color, bg, border, icon }) => (
-            <div
-              key={label}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                background: bg,
-                border: `1px solid ${border}`,
-                borderRadius: "9999px",
-                padding: "5px 14px",
-                fontSize: "14px",
-                color,
-                cursor: "default",
-              }}
-            >
-              <span>{icon}</span>
-              {label}
-            </div>
-          ))}
+          {loggedDrinks.map(({ name, color, bg, border, icon, count }) => {
+            const label = count > 1 ? `${name} (${count} cangkir)` : name;
+            return (
+              <div
+                key={name}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: bg,
+                  border: `1px solid ${border}`,
+                  borderRadius: "9999px",
+                  padding: "5px 14px",
+                  fontSize: "14px",
+                  color,
+                  cursor: "default",
+                }}
+              >
+                <span>{icon}</span>
+                {label}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -1339,7 +1385,7 @@ function CaffeineModal({ onClose, onSave }) {
   }, [selectedDrink, quantity]);
 
   const handleSave = () => {
-    onSave(calculatedCaffeine);
+    onSave(calculatedCaffeine, selectedDrink, quantity);
     onClose();
   };
 
