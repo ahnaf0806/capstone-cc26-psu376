@@ -961,7 +961,7 @@ function PageContent({
                   textTransform: "uppercase",
                 }}
               >
-                KONSENTRASI SERUM 7 HARI
+                KADAR KAFEIN MINGGUAN
               </span>
               <div
                 style={{ display: "flex", alignItems: "center", gap: "6px" }}
@@ -975,7 +975,7 @@ function PageContent({
                   }}
                 />
                 <span style={{ fontSize: "14px", color: "#50453e" }}>
-                  Aktual (mg)
+                  Kadar Saat Ini (mg)
                 </span>
               </div>
             </div>
