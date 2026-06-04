@@ -1648,9 +1648,7 @@ function CaffeineModal({ onClose, onSave }) {
                     padding: "16px",
                     borderRadius: "16px",
                     background:
-                      timeOption === "now"
-                        ? "rgba(27,109,36,0.05)"
-                        : "#fff",
+                      timeOption === "now" ? "rgba(27,109,36,0.05)" : "#fff",
                     border:
                       timeOption === "now"
                         ? "1.5px solid #1b6d24"
@@ -1667,8 +1665,7 @@ function CaffeineModal({ onClose, onSave }) {
                 >
                   <div
                     style={{
-                      background:
-                        timeOption === "now" ? "#1b6d24" : "#fff",
+                      background: timeOption === "now" ? "#1b6d24" : "#fff",
                       border:
                         timeOption === "now"
                           ? "2px solid #1b6d24"
@@ -1726,9 +1723,7 @@ function CaffeineModal({ onClose, onSave }) {
                     padding: "16px",
                     borderRadius: "16px",
                     background:
-                      timeOption === "custom"
-                        ? "rgba(27,109,36,0.05)"
-                        : "#fff",
+                      timeOption === "custom" ? "rgba(27,109,36,0.05)" : "#fff",
                     border:
                       timeOption === "custom"
                         ? "1.5px solid #1b6d24"
@@ -1745,8 +1740,7 @@ function CaffeineModal({ onClose, onSave }) {
                 >
                   <div
                     style={{
-                      background:
-                        timeOption === "custom" ? "#1b6d24" : "#fff",
+                      background: timeOption === "custom" ? "#1b6d24" : "#fff",
                       border:
                         timeOption === "custom"
                           ? "2px solid #1b6d24"
