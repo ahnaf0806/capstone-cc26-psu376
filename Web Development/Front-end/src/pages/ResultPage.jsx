@@ -257,7 +257,7 @@ const maxMg = Math.max(...barData.map((d) => d.mg));
 export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const { isLoggedIn, user } = useAuthStore();
 
   const [result, setResult] = useState(location.state?.result ?? null);
   const [loading, setLoading] = useState(!location.state?.result);
@@ -483,7 +483,7 @@ export default function ResultPage() {
                 flexShrink: 0,
               }}
             >
-              A
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
             </div>
             <div>
               <div
@@ -493,7 +493,7 @@ export default function ResultPage() {
                   color: "#1b1c1c",
                 }}
               >
-                Alex Chen
+                {user?.name || 'User'}
               </div>
               <Link
                 to="/profile"

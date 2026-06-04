@@ -214,7 +214,7 @@ export default function Header() {
                       {userName}
                     </div>
                     <div className="text-muted" style={{ fontSize: "12px" }}>
-                      alex.chen@kopimetric.com
+                      {user?.email || "user@kopimetric.com"}
                     </div>
                     <span
                       className="badge bg-[#1b6d24]/10 text-[#1b6d24] mt-1.5 fw-semibold"

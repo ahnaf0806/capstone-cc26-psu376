@@ -170,7 +170,7 @@ const DrinkIcon = ({ coffeeType }) => {
 
 export default function HistoryPage() {
   const navigate = useNavigate();
-  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const { isLoggedIn, user } = useAuthStore();
 
   // Filter & UI states
   const [searchQuery, setSearchQuery] = useState("");
@@ -532,7 +532,7 @@ export default function HistoryPage() {
                 flexShrink: 0,
               }}
             >
-              A
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
             </div>
             <div>
               <div
@@ -542,7 +542,7 @@ export default function HistoryPage() {
                   color: "#1b1c1c",
                 }}
               >
-                Alex Chen
+                {user?.name || 'User'}
               </div>
               <Link
                 to="/profile"

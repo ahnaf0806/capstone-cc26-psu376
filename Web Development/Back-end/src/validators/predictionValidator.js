@@ -6,6 +6,7 @@ const VALID_COFFEE_TYPES = [
   "Latte / Cappuccino",
   "Cold Brew",
   "Matcha / Teh Hijau",
+  "Kopi Instan",
 ];
 const VALID_ACTIVITY = [
   "Sedentary",

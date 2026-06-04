@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import { useAuthStore } from '../store/authStore';
 import { 
   User, Mail, Lock, Shield, ChevronRight, Camera, LogOut, ArrowLeft, Heart, Info, HelpCircle
 } from 'lucide-react';
@@ -25,10 +26,18 @@ const IconHistory = () => (
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const { user, token, setAuth, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [email, setEmail] = useState('alex.chen@example.com');
-  const [name, setName] = useState('Alex Chen');
+  const [email, setEmail] = useState(user?.email || '');
+  const [name, setName] = useState(user?.name || '');
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+      setEmail(user.email || '');
+    }
+  }, [user]);
 
   const navItems = [
     { icon: <IconDashboard />, label: 'Dashboard', active: false, to: '/result' },
@@ -37,15 +46,14 @@ export default function ProfilePage() {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userName');
+    logout();
     navigate('/');
   };
 
   const handleSave = () => {
     setIsEditing(false);
-    localStorage.setItem('userName', name);
-    // Simple toast or feedback in console
+    const updatedUser = { ...user, name, email };
+    setAuth({ user: updatedUser, token });
     console.log('Saved profile details', { name, email });
   };
 
@@ -105,10 +113,10 @@ export default function ProfilePage() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '16px', color: '#fff', fontWeight: '700', flexShrink: 0
             }}>
-              {name.charAt(0).toUpperCase()}
+              {(name || 'User').charAt(0).toUpperCase()}
             </div>
             <div>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1b1c1c' }}>{name}</div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1b1c1c' }}>{name || 'User'}</div>
               <div style={{ fontSize: '12px', color: '#1b6d24', fontWeight: '600' }}>Edit Profil</div>
             </div>
           </div>
@@ -171,7 +179,7 @@ function ProfileContent({ email, setEmail, name, setName, isEditing, setIsEditin
               boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)'
             }}
           >
-            {name.charAt(0).toUpperCase()}
+            {(name || 'User').charAt(0).toUpperCase()}
           </div>
           {/* Edit Badge Overlay */}
           <button 

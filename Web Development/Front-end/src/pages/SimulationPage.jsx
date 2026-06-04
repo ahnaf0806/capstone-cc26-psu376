@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import { useAuthStore } from '../store/authStore';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceDot
 } from 'recharts';
@@ -81,6 +82,9 @@ const IconClearance = () => (
 );
 
 export default function SimulationPage() {
+  const { user } = useAuthStore();
+  const userName = user?.name || "User";
+
   // 1. Simulation Engine State variables (defaults matching Figma spec)
   const [hydration, setHydration] = useState(85); // 85%
   const [activity, setActivity] = useState(50); // 50 (Moderate)
@@ -280,9 +284,9 @@ export default function SimulationPage() {
               background: 'linear-gradient(135deg, #553722, #a0f399)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '16px', color: '#fff', fontWeight: '700', flexShrink: 0
-            }}>A</div>
+            }}>{userName.charAt(0).toUpperCase()}</div>
             <div>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1b1c1c' }}>Alex Chen</div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1b1c1c' }}>{userName}</div>
               <Link 
                 to="/profile" 
                 style={{ 

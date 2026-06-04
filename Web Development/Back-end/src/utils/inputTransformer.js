@@ -7,6 +7,7 @@ const CAFFEINE_PER_CUP = {
   "Latte / Cappuccino": 63,
   "Cold Brew": 200,
   "Matcha / Teh Hijau": 70,
+  "Kopi Instan": 80,
   default: 95,
 };
 
