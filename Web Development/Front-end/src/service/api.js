@@ -2,7 +2,9 @@ import axios from "axios";
 
 //  setting default
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL:
+    import.meta.env.VITE_API_BASE_URL ||
+    "https://nafta886-kopi-capstone-backend.hf.space/api",
   headers: {
     "Content-Type": "application/json",
   },
