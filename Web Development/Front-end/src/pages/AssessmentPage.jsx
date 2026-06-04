@@ -6,6 +6,20 @@ import { ArrowRight, ArrowLeft, User, Coffee, Activity } from "lucide-react";
 import { predictionService } from "../service/predictionService";
 import { useAuthStore } from "../store/authStore";
 
+const coffeeTypeOptions = [
+  { value: "Espresso", label: "Espresso : 60-80 mg" },
+  { value: "Kopi Instan", label: "Kopi Instan : 60-100 mg" },
+  { value: "Latte / Cappuccino", label: "Latte/Cappucino : 60-125 mg" },
+  { value: "Cold Brew", label: "Cold Brew : 100-200 mg" },
+];
+
+const activityOptions = [
+  { key: "Sedentary", label: "SEDENTARY", sublabel: "<1 Jam/Minggu", icon: "🪑" },
+  { key: "Lightly Active", label: "LIGHTLY ACTIVE", sublabel: "1-3 Jam/Minggu", icon: "🚶" },
+  { key: "Very Active", label: "VERY ACTIVE", sublabel: "4-8 Jam/Minggu", icon: "🏃" },
+  { key: "Athlete", label: "ATHLETE", sublabel: ">8 Jam/Minggu", icon: "⚡" },
+];
+
 export default function AssessmentPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -152,7 +166,7 @@ export default function AssessmentPage() {
                   }}
                 >
                   {step >= 2
-                    ? "CaffeineLens Bio-Hacker Edition"
+                    ? "KopiMetric Analisis kebutuhan kafein"
                     : `Langkah ${step} dari 3`}
                 </span>
               </div>
@@ -204,9 +218,22 @@ export default function AssessmentPage() {
                         </label>
                         <input
                           type="number"
+                          min="12"
+                          max="90"
                           placeholder="contoh: 28"
                           className={`form-control py-2.5 px-3 border rounded-3 text-dark focus:border-[#1b6d24] focus:ring-2 focus:ring-[#1b6d24]/20 ${errors.age ? "border-danger" : "border-[#d4c3ba]"}`}
                           style={{ fontSize: "15px" }}
+                          onKeyDown={(e) => {
+                            if (["-", "e", "+"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onPaste={(e) => {
+                            const paste = e.clipboardData.getData("text");
+                            if (paste.includes("-")) {
+                              e.preventDefault();
+                            }
+                          }}
                           {...register("age", {
                             required: "Umur wajib diisi",
                             min: {
@@ -235,9 +262,22 @@ export default function AssessmentPage() {
                         </label>
                         <input
                           type="number"
+                          min="30"
+                          max="200"
                           placeholder="contoh: 72"
                           className={`form-control py-2.5 px-3 border rounded-3 text-dark focus:border-[#1b6d24] focus:ring-2 focus:ring-[#1b6d24]/20 ${errors.weight ? "border-danger" : "border-[#d4c3ba]"}`}
                           style={{ fontSize: "15px" }}
+                          onKeyDown={(e) => {
+                            if (["-", "e", "+"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onPaste={(e) => {
+                            const paste = e.clipboardData.getData("text");
+                            if (paste.includes("-")) {
+                              e.preventDefault();
+                            }
+                          }}
                           {...register("weight", {
                             required: "Berat badan wajib diisi",
                             min: { value: 30, message: "Berat minimal 30 kg" },
@@ -264,9 +304,22 @@ export default function AssessmentPage() {
                         </label>
                         <input
                           type="number"
+                          min="100"
+                          max="230"
                           placeholder="contoh: 175"
                           className={`form-control py-2.5 px-3 border rounded-3 text-dark focus:border-[#1b6d24] focus:ring-2 focus:ring-[#1b6d24]/20 ${errors.height ? "border-danger" : "border-[#d4c3ba]"}`}
                           style={{ fontSize: "15px" }}
+                          onKeyDown={(e) => {
+                            if (["-", "e", "+"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onPaste={(e) => {
+                            const paste = e.clipboardData.getData("text");
+                            if (paste.includes("-")) {
+                              e.preventDefault();
+                            }
+                          }}
                           {...register("height", {
                             required: "Tinggi badan wajib diisi",
                             min: {
@@ -339,9 +392,9 @@ export default function AssessmentPage() {
 
                 {/* STEP 2: KONSUMSI & GAYA HIDUP */}
                 {step === 2 && (
-                  <div className="d-flex flex-col gap-4 animate-fade-in">
+                  <div className="d-flex flex-col gap-4 animate-fade-in text-[#030712]">
                     {/* Main Heading */}
-                    <div className="mb-1">
+                    <div className="mb-1 text-start">
                       <h3
                         className="fw-bold text-[#553722] m-0 mb-1"
                         style={{ fontSize: "28px", letterSpacing: "-0.32px" }}
@@ -361,27 +414,26 @@ export default function AssessmentPage() {
 
                     {/* Section 1: Konsumsi Kafein */}
                     <div
-                      className="p-4 rounded-3 border border-[#d4c3ba] shadow-sm"
-                      style={{ background: "#fcf9f8" }}
+                      className="p-4 rounded-4 border border-[#e5e7eb] shadow-sm text-start"
+                      style={{ background: "#ffffff" }}
                     >
                       <div className="d-flex gap-2 align-items-center mb-4">
-                        <Coffee size={22} className="text-[#553722]" />
+                        <Coffee size={24} className="text-[#553722]" />
                         <h4
                           className="fw-bold text-[#553722] m-0"
-                          style={{ fontSize: "20px" }}
+                          style={{ fontSize: "22px" }}
                         >
                           Konsumsi Kafein
                         </h4>
                       </div>
 
                       {/* Frequency & Last Time Row */}
-                      <div className="row g-3 mb-3">
-                        <div className="col-12 col-sm-6">
+                      <div className="row g-4 mb-4">
+                        <div className="col-12 col-md-6">
                           <label
-                            className="form-label fw-medium text-[#50453e] mb-1"
+                            className="form-label fw-medium text-[#1b1c1c] mb-2"
                             style={{
-                              fontSize: "13.5px",
-                              letterSpacing: "0.14px",
+                              fontSize: "15px",
                             }}
                           >
                             Frekuensi Konsumsi (Harian)
@@ -389,12 +441,26 @@ export default function AssessmentPage() {
                           <div className="d-flex align-items-center gap-2">
                             <input
                               type="number"
+                              min="0"
+                              max="15"
                               placeholder="0"
-                              className={`form-control border rounded-3 text-dark ${errors.dailyCups ? "border-danger" : "border-[#d4c3ba]"}`}
+                              className={`form-control border rounded-3 text-center ${errors.dailyCups ? "border-danger" : "border-[#e5e7eb]"}`}
                               style={{
-                                fontSize: "15px",
-                                width: "80px",
-                                background: "#fcf9f8",
+                                fontSize: "16px",
+                                width: "100px",
+                                height: "46px",
+                                background: "#ffffff",
+                              }}
+                              onKeyDown={(e) => {
+                                if (["-", "e", "+"].includes(e.key)) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onPaste={(e) => {
+                                const paste = e.clipboardData.getData("text");
+                                if (paste.includes("-")) {
+                                  e.preventDefault();
+                                }
                               }}
                               {...register("dailyCups", {
                                 required: "Konsumsi harian wajib diisi",
@@ -406,7 +472,7 @@ export default function AssessmentPage() {
                               })}
                             />
                             <span
-                              className="text-[#50453e]"
+                              className="text-[#1b1c1c] fw-normal"
                               style={{ fontSize: "15px" }}
                             >
                               cangkir / hari
@@ -422,66 +488,62 @@ export default function AssessmentPage() {
                           )}
                         </div>
 
-                        <div className="col-12 col-sm-6">
+                        <div className="col-12 col-md-6">
                           <label
-                            className="form-label fw-medium text-[#50453e] mb-1"
+                            className="form-label fw-medium text-[#1b1c1c] mb-2"
                             style={{
-                              fontSize: "13.5px",
-                              letterSpacing: "0.14px",
+                              fontSize: "15px",
                             }}
                           >
                             Rata-rata Waktu Konsumsi Terakhir
                           </label>
                           <input
                             type="time"
-                            className="form-control border border-[#d4c3ba] rounded-3 text-dark"
-                            style={{ fontSize: "15px", background: "#fcf9f8" }}
+                            className="form-control border border-[#e5e7eb] rounded-3 text-dark"
+                            style={{ fontSize: "16px", height: "46px", background: "#ffffff" }}
                             {...register("lastConsumptionTime")}
                           />
                         </div>
                       </div>
 
                       {/* Coffee Types - Pill chips */}
-                      <div>
+                      <div className="mb-2">
                         <label
-                          className="form-label fw-medium text-[#50453e] mb-2"
+                          className="form-label fw-medium text-[#1b1c1c] mb-3"
                           style={{
-                            fontSize: "13.5px",
-                            letterSpacing: "0.14px",
+                            fontSize: "15px",
                           }}
                         >
                           Jenis kopi yang sering dikonsumsi
                         </label>
-                        <div className="d-flex flex-wrap gap-2">
-                          {[
-                            "Espresso",
-                            "Latte / Cappuccino",
-                            "Cold Brew",
-                            "Matcha / Teh Hijau",
-                          ].map((type) => {
-                            const isActive = selectedCoffeeType === type;
+                        <div className="row g-3">
+                          {coffeeTypeOptions.map((opt) => {
+                            const isActive = selectedCoffeeType === opt.value;
                             return (
-                              <button
-                                key={type}
-                                type="button"
-                                onClick={() =>
-                                  setValue("coffeeType", type, {
-                                    shouldValidate: true,
-                                  })
-                                }
-                                className={`btn border transition-all`}
-                                style={{
-                                  borderRadius: "9999px",
-                                  fontSize: "15px",
-                                  padding: "10px 22px",
-                                  fontWeight: isActive ? "600" : "400",
-                                  background: isActive ? "#1b6d24" : "#fcf9f8",
-                                  borderColor: isActive ? "#1b6d24" : "#d4c3ba",
-                                  color: isActive ? "#fff" : "#50453e",
-                                }}
-                              >
-                                {type}
-                              </button>
+                              <div key={opt.value} className="col-12 col-sm-6">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setValue("coffeeType", opt.value, {
+                                      shouldValidate: true,
+                                    })
+                                  }
+                                  className={`btn w-100 py-2.5 px-4 border rounded-pill transition-all text-center ${
+                                    isActive
+                                      ? "bg-[#1b6d24] border-[#1b6d24] text-white font-semibold shadow-sm"
+                                      : "bg-white border-[#e5e7eb] text-[#374151] hover:bg-gray-50"
+                                  }`}
+                                  style={{
+                                    fontSize: "15px",
+                                    height: "48px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                  }}
+                                >
+                                  {opt.label}
+                                </button>
+                              </div>
                             );
                           })}
                         </div>
@@ -494,7 +556,7 @@ export default function AssessmentPage() {
                         />
                         {errors.coffeeType && (
                           <span
-                            className="text-danger d-block mt-2"
+                            className="text-danger d-block mt-3"
                             style={{ fontSize: "12px" }}
                           >
                             {errors.coffeeType.message}
@@ -505,14 +567,14 @@ export default function AssessmentPage() {
 
                     {/* Section 2: Data Gaya Hidup */}
                     <div
-                      className="p-4 rounded-3 border border-[#d4c3ba] shadow-sm"
-                      style={{ background: "#fcf9f8" }}
+                      className="p-4 rounded-4 border border-[#e5e7eb] shadow-sm text-start"
+                      style={{ background: "#ffffff" }}
                     >
                       <div className="d-flex gap-2 align-items-center mb-4">
-                        <Activity size={22} className="text-[#553722]" />
+                        <Activity size={24} className="text-[#553722]" />
                         <h4
                           className="fw-bold text-[#553722] m-0"
-                          style={{ fontSize: "20px" }}
+                          style={{ fontSize: "22px" }}
                         >
                           Data Gaya Hidup
                         </h4>
@@ -522,10 +584,9 @@ export default function AssessmentPage() {
                       <div className="mb-4">
                         <div className="d-flex justify-content-between align-items-center mb-2">
                           <label
-                            className="form-label fw-medium text-[#50453e] m-0"
+                            className="form-label fw-medium text-[#1b1c1c] m-0"
                             style={{
-                              fontSize: "13.5px",
-                              letterSpacing: "0.14px",
+                              fontSize: "15px",
                             }}
                           >
                             Durasi Tidur Rata-rata
@@ -533,11 +594,11 @@ export default function AssessmentPage() {
                           <span
                             className="fw-bold"
                             style={{
-                              fontSize: "15px",
-                              color: getSleepLabel(sleepHoursValue).color,
+                              fontSize: "16px",
+                              color: "#1b6d24",
                             }}
                           >
-                            {getSleepLabel(sleepHoursValue).label}
+                            {sleepHoursValue} Jam
                           </span>
                         </div>
                         <input
@@ -545,44 +606,48 @@ export default function AssessmentPage() {
                           min="3"
                           max="14"
                           step="0.5"
-                          className="w-100"
+                          className="w-100 custom-range-slider"
                           style={{
                             accentColor: "#1b6d24",
                             height: "8px",
                             cursor: "pointer",
+                            borderRadius: "9999px",
+                            background: `linear-gradient(to right, #1b6d24 ${((sleepHoursValue - 3) / 11) * 100}%, #e5e7eb ${((sleepHoursValue - 3) / 11) * 100}%)`,
+                            appearance: "none",
+                            WebkitAppearance: "none",
                           }}
                           {...register("sleepHours")}
                         />
-                        <div className="d-flex justify-content-between mt-1">
+                        <div className="d-flex justify-content-between mt-2">
                           <span
                             style={{
-                              fontSize: "10px",
+                              fontSize: "11px",
                               color: "#82746d",
-                              textTransform: "uppercase",
-                              letterSpacing: "-0.5px",
+                              fontWeight: "500",
+                              letterSpacing: "0.5px",
                             }}
                           >
-                            Kurang
+                            KURANG
                           </span>
                           <span
                             style={{
-                              fontSize: "10px",
+                              fontSize: "11px",
                               color: "#82746d",
-                              textTransform: "uppercase",
-                              letterSpacing: "-0.5px",
+                              fontWeight: "500",
+                              letterSpacing: "0.5px",
                             }}
                           >
-                            Optimal (7-9 Jam)
+                            OPTIMAL (7-9 JAM)
                           </span>
                           <span
                             style={{
-                              fontSize: "10px",
+                              fontSize: "11px",
                               color: "#82746d",
-                              textTransform: "uppercase",
-                              letterSpacing: "-0.5px",
+                              fontWeight: "500",
+                              letterSpacing: "0.5px",
                             }}
                           >
-                            Berlebih
+                            BERLEBIH
                           </span>
                         </div>
                       </div>
@@ -590,36 +655,18 @@ export default function AssessmentPage() {
                       {/* Physical Activity Level */}
                       <div className="mb-4">
                         <label
-                          className="form-label fw-medium text-[#50453e] mb-2"
+                          className="form-label fw-medium text-[#1b1c1c] mb-3"
                           style={{
-                            fontSize: "13.5px",
-                            letterSpacing: "0.14px",
+                            fontSize: "15px",
                           }}
                         >
                           Tingkat Aktivitas Fisik
                         </label>
                         <div className="row g-2">
-                          {[
-                            {
-                              key: "Sedentary",
-                              label: "Sedentary",
-                              icon: "🪑",
-                            },
-                            {
-                              key: "Lightly Active",
-                              label: "Lightly Active",
-                              icon: "🚶",
-                            },
-                            {
-                              key: "Very Active",
-                              label: "Very Active",
-                              icon: "🏃",
-                            },
-                            { key: "Athlete", label: "Athlete", icon: "⚡" },
-                          ].map(({ key, label, icon }) => {
+                          {activityOptions.map(({ key, label, sublabel, icon }) => {
                             const isActive = selectedActivityLevel === key;
                             return (
-                              <div key={key} className="col-6 col-sm-3">
+                              <div key={key} className="col-6 col-md-3">
                                 <button
                                   type="button"
                                   onClick={() =>
@@ -627,27 +674,25 @@ export default function AssessmentPage() {
                                       shouldValidate: true,
                                     })
                                   }
-                                  className="btn w-100 d-flex flex-col align-items-center justify-content-center gap-1 border transition-all"
+                                  className={`btn w-100 d-flex flex-column align-items-center justify-content-center gap-1 border-2 transition-all ${
+                                    isActive
+                                      ? "border-[#1b6d24] bg-[#d1e7dd] text-[#1b6d24]"
+                                      : "bg-white border-[#e5e7eb] text-[#374151] hover:bg-gray-50"
+                                  }`}
                                   style={{
                                     borderRadius: "12px",
-                                    padding: "20px 8px",
-                                    fontSize: "11px",
-                                    fontWeight: isActive ? "700" : "600",
-                                    letterSpacing: "0.6px",
-                                    background: isActive
-                                      ? "rgba(160,243,153,0.2)"
-                                      : "#fff",
-                                    borderColor: isActive
-                                      ? "#1b6d24"
-                                      : "#d4c3ba",
-                                    color: isActive ? "#217128" : "#1b1c1c",
+                                    padding: "24px 12px",
+                                    transition: "all 0.2s ease",
                                   }}
                                 >
-                                  <span style={{ fontSize: "20px" }}>
+                                  <span className="mb-1" style={{ fontSize: "24px" }}>
                                     {icon}
                                   </span>
-                                  <span style={{ textTransform: "uppercase" }}>
+                                  <span className="fw-bold tracking-wide" style={{ fontSize: "12.5px" }}>
                                     {label}
+                                  </span>
+                                  <span className="text-[#82746d]" style={{ fontSize: "11px" }}>
+                                    {sublabel}
                                   </span>
                                 </button>
                               </div>
@@ -673,62 +718,69 @@ export default function AssessmentPage() {
                       {/* Stress Level Slider */}
                       <div>
                         <label
-                          className="form-label fw-medium text-[#50453e] mb-2"
+                          className="form-label fw-medium text-[#1b1c1c] mb-3"
                           style={{
-                            fontSize: "13.5px",
-                            letterSpacing: "0.14px",
+                            fontSize: "15px",
                           }}
                         >
                           Tingkat Stres Saat Ini
                         </label>
-                        <div className="d-flex align-items-center gap-2">
-                          <span style={{ fontSize: "20px" }}>😊</span>
-                          <input
-                            type="range"
-                            min="1"
-                            max="10"
-                            step="1"
-                            className="flex-grow-1"
-                            style={{
-                              accentColor: "#1b6d24",
-                              height: "8px",
-                              cursor: "pointer",
-                            }}
-                            {...register("stressLevel")}
-                          />
-                          <span style={{ fontSize: "20px" }}>😟</span>
-                        </div>
-                        <div
-                          className="d-flex justify-content-between mt-1"
-                          style={{ padding: "0 28px" }}
-                        >
-                          <span
-                            style={{
-                              fontSize: "10px",
-                              color: "#82746d",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            Rendah
-                          </span>
-                          <span
-                            style={{
-                              fontSize: "10px",
-                              color: "#82746d",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            Moderat
-                          </span>
-                          <span
-                            style={{
-                              fontSize: "10px",
-                              color: "#82746d",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            Tinggi
-                          </span>
+                        <div className="d-flex flex-column w-100">
+                          <div className="d-flex align-items-center gap-3">
+                            <span style={{ fontSize: "24px", flexShrink: 0 }}>😊</span>
+                            <div className="flex-grow-1">
+                              <input
+                                type="range"
+                                min="1"
+                                max="10"
+                                step="1"
+                                className="w-100 custom-range-slider"
+                                style={{
+                                  accentColor: "#1b6d24",
+                                  height: "8px",
+                                  cursor: "pointer",
+                                  borderRadius: "9999px",
+                                  background: `linear-gradient(to right, #1b6d24 ${((stressLevelValue - 1) / 9) * 100}%, #e5e7eb ${((stressLevelValue - 1) / 9) * 100}%)`,
+                                  appearance: "none",
+                                  WebkitAppearance: "none",
+                                }}
+                                {...register("stressLevel")}
+                              />
+                              <div className="d-flex justify-content-between mt-2">
+                                <span
+                                  style={{
+                                    fontSize: "11px",
+                                    color: "#82746d",
+                                    fontWeight: "500",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  RENDAH
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "11px",
+                                    color: "#82746d",
+                                    fontWeight: "500",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  MODERAT
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "11px",
+                                    color: "#82746d",
+                                    fontWeight: "500",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  TINGGI
+                                </span>
+                              </div>
+                            </div>
+                            <span style={{ fontSize: "24px", flexShrink: 0 }}>😰</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1129,7 +1181,7 @@ export default function AssessmentPage() {
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="btn bg-[#171717] text-white py-2 px-4 d-inline-flex align-items-center gap-2"
+                      className="btn bg-[#171717] hover:bg-[#1b6d24] text-white hover:text-white py-2 px-4 d-inline-flex align-items-center gap-2 transition-all duration-200"
                       style={{
                         borderRadius: "12px",
                         fontSize: "15px",
@@ -1145,7 +1197,7 @@ export default function AssessmentPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="btn bg-[#171717] text-white py-2 px-4 d-inline-flex align-items-center gap-2"
+                      className="btn bg-[#171717] hover:bg-[#1b6d24] text-white hover:text-white py-2 px-4 d-inline-flex align-items-center gap-2 transition-all duration-200"
                       style={{
                         borderRadius: "12px",
                         fontSize: "15px",
@@ -1376,6 +1428,32 @@ export default function AssessmentPage() {
       <style>{`
         @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
+        .custom-range-slider {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 8px;
+          border-radius: 9999px;
+          outline: none;
+          transition: background 0.1s;
+        }
+        .custom-range-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #1b6d24;
+          cursor: pointer;
+          border: none;
+        }
+        .custom-range-slider::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #1b6d24;
+          cursor: pointer;
+          border: none;
+        }
       `}</style>
     </>
   );

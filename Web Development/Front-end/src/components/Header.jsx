@@ -103,7 +103,7 @@ export default function Header() {
             className="fs-3 fw-bold tracking-tight text-white m-0"
             style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
-            ScansCoffee
+            KopiMetric
           </span>
         </Link>
 
@@ -128,7 +128,7 @@ export default function Header() {
                 to="/simulation"
                 className={`text-white text-decoration-none transition-colors py-2 ${location.pathname === "/simulation" ? "fw-bold border-bottom border-[#9ee86f]" : "opacity-75 hover:opacity-100"}`}
               >
-                Simulation
+                Simulasi
               </Link>
               <Link
                 to="/history"
@@ -214,7 +214,7 @@ export default function Header() {
                       {userName}
                     </div>
                     <div className="text-muted" style={{ fontSize: "12px" }}>
-                      alex.chen@scanscoffee.com
+                      alex.chen@kopimetric.com
                     </div>
                     <span
                       className="badge bg-[#1b6d24]/10 text-[#1b6d24] mt-1.5 fw-semibold"
@@ -356,7 +356,7 @@ export default function Header() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-white text-decoration-none opacity-80 hover:opacity-100 transition-colors py-2 border-bottom border-secondary border-opacity-25"
                   >
-                    Simulation
+                    Simulasi
                   </Link>
                   <Link
                     to="/history"

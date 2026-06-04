@@ -95,7 +95,7 @@ export default function AboutUsPage() {
                   maxWidth: '640px' 
                 }}
               >
-                At CaffeineLens, we are dedicated to helping people optimize their cognitive and physical performance through precision metabolism analysis. Get to know the team leading the way in personalized, bio-hacked nutrition.
+                At KopiMetric, we are dedicated to helping people optimize their cognitive and physical performance through precision metabolism analysis. Get to know the team leading the way in personalized, bio-hacked nutrition.
               </p>
             </div>
 
@@ -249,13 +249,13 @@ export default function AboutUsPage() {
         <div className="container-xl px-4 position-relative z-2">
           <div className="row g-4 g-md-5 pb-4 pb-md-5 border-bottom border-secondary border-opacity-25">
             <div className="col-12 col-lg-6">
-              <h3 className="fs-2 fw-bold mb-3 tracking-tight">ScansCoffee</h3>
+              <h3 className="fs-2 fw-bold mb-3 tracking-tight">KopiMetric</h3>
               <p className="text-white opacity-75 mb-4" style={{ maxWidth: '400px', lineHeight: '1.6' }}>
                 Menyeimbangkan produktivitas kafein dan kesehatan tidur Anda menggunakan pemodelan AI mutakhir.
               </p>
               <div className="d-flex flex-column gap-2 text-white-50">
                 <span className="d-flex align-items-center gap-2">
-                  <Mail size={16} /> support@scanscoffee.com
+                  <Mail size={16} /> support@kopimetric.com
                 </span>
                 <span className="d-flex align-items-center gap-2">
                   <Phone size={16} /> +62 812-3456-7890
@@ -289,7 +289,7 @@ export default function AboutUsPage() {
 
           <div className="pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
             <p className="text-white opacity-50 m-0" style={{ fontSize: '14px' }}>
-              &copy; 2026 ScansCoffee. All rights reserved.
+              &copy; 2026 KopiMetric. All rights reserved.
             </p>
             <p className="text-white opacity-50 m-0" style={{ fontSize: '14px' }}>
               Made with &hearts; for Capstone CC26-PSU376
@@ -306,7 +306,7 @@ export default function AboutUsPage() {
           fontFamily: '"Plus Jakarta Sans", sans-serif',
           textTransform: 'uppercase'
         }}>
-          ScansCoffee
+          KopiMetric
         </div>
       </footer>
 

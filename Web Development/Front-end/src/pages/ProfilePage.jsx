@@ -32,7 +32,7 @@ export default function ProfilePage() {
 
   const navItems = [
     { icon: <IconDashboard />, label: 'Dashboard', active: false, to: '/result' },
-    { icon: <IconSimulation />, label: 'Simulation', active: false, to: '/simulation' },
+    { icon: <IconSimulation />, label: 'Simulasi', active: false, to: '/simulation' },
     { icon: <IconHistory />, label: 'Riwayat', active: false, to: '/history' },
   ];
 
@@ -70,8 +70,8 @@ export default function ProfilePage() {
           <div>
             {/* Brand */}
             <div style={{ paddingBottom: '40px' }}>
-              <div style={{ fontSize: '22px', fontWeight: '800', color: '#553722', lineHeight: 1.2 }}>CaffeineLens</div>
-              <div style={{ fontSize: '13px', fontWeight: '500', color: '#50453e', letterSpacing: '0.14px', marginTop: '2px' }}>Bio-Hacker Edition</div>
+              <div style={{ fontSize: '22px', fontWeight: '800', color: '#553722', lineHeight: 1.2 }}>KopiMetric</div>
+              <div style={{ fontSize: '13px', fontWeight: '500', color: '#50453e', letterSpacing: '0.14px', marginTop: '2px' }}>Analisis kebutuhan kafein</div>
             </div>
 
             {/* Nav */}

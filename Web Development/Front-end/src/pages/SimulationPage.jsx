@@ -172,9 +172,9 @@ export default function SimulationPage() {
   // Determined by Cortisol + Active Caffeine. High stress and caffeine = High cognitive load.
   const cognitiveLoad = useMemo(() => {
     const totalScore = stress * 0.6 + (100 - calculatedHalfLife * 10) * 0.4;
-    if (totalScore > 70) return 'Extreme';
-    if (totalScore > 40) return 'High';
-    if (totalScore > 20) return 'Moderate';
+    if (totalScore > 70) return 'Ekstrem';
+    if (totalScore > 40) return 'Tinggi';
+    if (totalScore > 20) return 'Sedang';
     return 'Optimal';
   }, [stress, calculatedHalfLife]);
 
@@ -222,7 +222,7 @@ export default function SimulationPage() {
   // Sidebar navigation items
   const navItems = [
     { icon: <IconDashboard />, label: 'Dashboard', active: false, to: '/result' },
-    { icon: <IconSimulation />, label: 'Simulation', active: true, to: '/simulation' },
+    { icon: <IconSimulation />, label: 'Simulasi', active: true, to: '/simulation' },
     { icon: <IconHistory />, label: 'Riwayat', active: false, to: '/history' },
   ];
 
@@ -246,8 +246,8 @@ export default function SimulationPage() {
           <div>
             {/* Brand */}
             <div style={{ paddingBottom: '40px' }}>
-              <div style={{ fontSize: '22px', fontWeight: '800', color: '#553722', lineHeight: 1.2 }}>CaffeineLens</div>
-              <div style={{ fontSize: '13px', fontWeight: '500', color: '#50453e', letterSpacing: '0.14px', marginTop: '2px' }}>Bio-Hacker Edition</div>
+              <div style={{ fontSize: '22px', fontWeight: '800', color: '#553722', lineHeight: 1.2 }}>KopiMetric</div>
+              <div style={{ fontSize: '13px', fontWeight: '500', color: '#50453e', letterSpacing: '0.14px', marginTop: '2px' }}>Analisis kebutuhan kafein</div>
             </div>
 
             {/* Navigation */}
@@ -307,10 +307,10 @@ export default function SimulationPage() {
           {/* Heading */}
           <div className="mb-4">
             <h1 style={{ fontSize: 'clamp(20px, 5vw, 32px)', fontWeight: '700', color: '#1b1c1c', margin: 0, letterSpacing: '-0.32px' }}>
-              Metabolic Simulation
+              Simulasi Metabolik
             </h1>
             <p style={{ fontSize: '15px', color: '#50453e', marginTop: '6px', marginBottom: 0 }}>
-              Adjust your physiological variables to predict caffeine clearance and sleep readiness.
+              Sesuaikan variabel fisiologis Anda untuk memprediksi pembersihan kafein dan kesiapan tidur.
             </p>
           </div>
 
@@ -331,14 +331,14 @@ export default function SimulationPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <IconEngine />
                   <span style={{ fontSize: '11px', fontWeight: '700', color: '#553722', letterSpacing: '0.6px', textTransform: 'uppercase' }}>
-                    SIMULATION ENGINE
+                    MESIN SIMULASI
                   </span>
                 </div>
 
                 {/* Hydration Slider */}
                 <div className="d-flex flex-column gap-2">
                   <div className="d-flex justify-content-between align-items-center">
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#50453e' }}>Hydration Level</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#50453e' }}>Tingkat Hidrasi</span>
                     <span style={{ fontSize: '16px', fontWeight: '700', color: '#1b6d24' }}>{hydration}%</span>
                   </div>
                   <input 
@@ -350,16 +350,16 @@ export default function SimulationPage() {
                     style={{ width: '100%', accentColor: '#1b6d24', cursor: 'pointer' }}
                   />
                   <span style={{ fontSize: '10px', color: '#50453e', opacity: 0.7 }}>
-                    Higher hydration accelerates renal clearance.
+                    Hidrasi yang lebih tinggi mempercepat pembuangan melalui ginjal.
                   </span>
                 </div>
 
                 {/* Physical Activity Slider */}
                 <div className="d-flex flex-column gap-2">
                   <div className="d-flex justify-content-between align-items-center">
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#50453e' }}>Physical Activity</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#50453e' }}>Aktivitas Fisik</span>
                     <span style={{ fontSize: '16px', fontWeight: '700', color: '#553722' }}>
-                      {activity < 33 ? 'Resting' : activity < 70 ? 'Moderate' : 'Active'}
+                      {activity < 33 ? 'Istirahat' : activity < 70 ? 'Sedang' : 'Aktif'}
                     </span>
                   </div>
                   <input 
@@ -371,16 +371,16 @@ export default function SimulationPage() {
                     style={{ width: '100%', accentColor: '#553722', cursor: 'pointer' }}
                   />
                   <span style={{ fontSize: '10px', color: '#50453e', opacity: 0.7 }}>
-                    Metabolic rate increases with cardiac output.
+                    Laju metabolisme meningkat seiring dengan curah jantung.
                   </span>
                 </div>
 
                 {/* Stress Slider */}
                 <div className="d-flex flex-column gap-2">
                   <div className="d-flex justify-content-between align-items-center">
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#50453e' }}>Current Stress (Cortisol)</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#50453e' }}>Stres Saat Ini (Kortisol)</span>
                     <span style={{ fontSize: '16px', fontWeight: '700', color: '#ba1a1a' }}>
-                      {stress < 33 ? 'Low' : stress < 70 ? 'Medium' : 'High'}
+                      {stress < 33 ? 'Rendah' : stress < 70 ? 'Sedang' : 'Tinggi'}
                     </span>
                   </div>
                   <input 
@@ -392,7 +392,7 @@ export default function SimulationPage() {
                     style={{ width: '100%', accentColor: '#ba1a1a', cursor: 'pointer' }}
                   />
                   <span style={{ fontSize: '10px', color: '#50453e', opacity: 0.7 }}>
-                    Stress hormones compete for enzymatic pathways.
+                    Hormon stres bersaing dalam jalur enzimatik.
                   </span>
                 </div>
 
@@ -455,18 +455,18 @@ export default function SimulationPage() {
                   <div className="d-flex align-items-center gap-2">
                     <IconChart />
                     <span style={{ fontSize: '11px', fontWeight: '700', color: '#553722', letterSpacing: '0.6px', textTransform: 'uppercase' }}>
-                      SERUM CONCENTRATION PROJECTION
+                      PROYEKSI KONSENTRASI SERUM
                     </span>
                   </div>
                   {/* Legend */}
                   <div className="d-flex gap-3 align-items-center">
                     <div className="d-flex align-items-center gap-2">
                       <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#1b6d24' }} />
-                      <span style={{ fontSize: '10px', fontWeight: '700', color: '#1b6d24' }}>Current</span>
+                      <span style={{ fontSize: '10px', fontWeight: '700', color: '#1b6d24' }}>Saat Ini</span>
                     </div>
                     <div className="d-flex align-items-center gap-2">
                       <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#82746d' }} />
-                      <span style={{ fontSize: '10px', fontWeight: '700', color: '#82746d' }}>Baseline</span>
+                      <span style={{ fontSize: '10px', fontWeight: '700', color: '#82746d' }}>Kondisi Dasar</span>
                     </div>
                   </div>
                 </div>
@@ -509,7 +509,7 @@ export default function SimulationPage() {
                 }}>
                   <IconInfo />
                   <div>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: '#1b1c1c' }}>Insight: </span>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: '#1b1c1c' }}>Wawasan: </span>
                     <span style={{ fontSize: '12px', color: '#50453e', lineHeight: '1.6' }}>
                       Berdasarkan tingkat aktivitas Anda yang <strong>{activity < 33 ? 'rendah' : activity < 70 ? 'sedang' : 'tinggi'}</strong> dan tingkat hidrasi yang <strong>{hydration < 65 ? 'kurang' : hydration < 85 ? 'cukup' : 'tinggi'}</strong>, 
                       kecepatan pembuangan kafein Anda <strong>{clearancePercentDiff > 0 ? `${clearancePercentDiff}% lebih cepat` : clearancePercentDiff < 0 ? `${Math.abs(clearancePercentDiff)}% lebih lambat` : 'sama'}</strong> dari rata-rata. 
@@ -526,7 +526,7 @@ export default function SimulationPage() {
           {/* Bento-Grid Row 2: Detailed Impact Analysis Grid */}
           <div>
             <div style={{ fontSize: '11px', fontWeight: '700', color: '#50453e', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '16px' }}>
-              Detailed Impact Analysis
+              Analisis Dampak Detail
             </div>
             
             <div className="row g-3">
@@ -543,13 +543,13 @@ export default function SimulationPage() {
                     }}>
                       <IconHeart />
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#1b1c1c' }}>Cardiac Output</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#1b1c1c' }}>Curah Jantung (Cardiac Output)</span>
                   </div>
                   <div style={{ fontSize: '24px', fontWeight: '700', color: '#1b1c1c', marginTop: '8px' }}>
                     {cardiacOutput} BPM
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: '500', color: '#1b6d24' }}>
-                    {activity > 70 ? 'Peak sports level output' : 'Predicted Peak during exercise'}
+                    {activity > 70 ? 'Output puncak tingkat olahraga' : 'Prediksi puncak saat berolahraga'}
                   </span>
                 </div>
               </div>
@@ -567,13 +567,13 @@ export default function SimulationPage() {
                     }}>
                       <IconBrain />
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#1b1c1c' }}>Cognitive Load</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#1b1c1c' }}>Beban Kognitif (Cognitive Load)</span>
                   </div>
                   <div style={{ fontSize: '24px', fontWeight: '700', color: '#1b1c1c', marginTop: '8px' }}>
                     {cognitiveLoad}
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: '500', color: '#553722' }}>
-                    {cognitiveLoad === 'Extreme' ? 'High anxiety risk' : 'Optimal for analytical tasks'}
+                    {cognitiveLoad === 'Ekstrem' ? 'Risiko kecemasan tinggi' : 'Optimal untuk tugas analitis'}
                   </span>
                 </div>
               </div>
@@ -591,13 +591,13 @@ export default function SimulationPage() {
                     }}>
                       <IconClearance />
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#1b1c1c' }}>Clearance Rate</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#1b1c1c' }}>Laju Pembersihan (Clearance Rate)</span>
                   </div>
                   <div style={{ fontSize: '24px', fontWeight: '700', color: '#1b1c1c', marginTop: '8px' }}>
-                    {clearanceRate} mg/hr
+                    {clearanceRate} mg/jam
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: '500', color: '#50453e' }}>
-                    Variable based on hydration
+                    Bervariasi berdasarkan hidrasi
                   </span>
                 </div>
               </div>

@@ -348,7 +348,7 @@ export default function HistoryPage() {
     },
     {
       icon: <IconSimulation />,
-      label: "Simulation",
+      label: "Simulasi",
       active: false,
       to: "/simulation",
     },
@@ -463,7 +463,7 @@ export default function HistoryPage() {
                   lineHeight: 1.2,
                 }}
               >
-                CaffeineLens
+                KopiMetric
               </div>
               <div
                 style={{
@@ -474,7 +474,7 @@ export default function HistoryPage() {
                   marginTop: "2px",
                 }}
               >
-                Bio-Hacker Edition
+                Analisis kebutuhan kafein
               </div>
             </div>
 

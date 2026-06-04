@@ -368,7 +368,7 @@ export default function ResultPage() {
     },
     {
       icon: <IconSimulation />,
-      label: "Simulation",
+      label: "Simulasi",
       active: false,
       to: "/simulation",
     },
@@ -416,7 +416,7 @@ export default function ResultPage() {
                   lineHeight: 1.2,
                 }}
               >
-                CaffeineLens
+                KopiMetric
               </div>
               <div
                 style={{
@@ -427,7 +427,7 @@ export default function ResultPage() {
                   marginTop: "2px",
                 }}
               >
-                Bio-Hacker Edition
+                Analisis kebutuhan kafein
               </div>
             </div>
 
@@ -1282,8 +1282,7 @@ const IconClose = () => (
 function CaffeineModal({ onClose, onSave }) {
   const [selectedDrink, setSelectedDrink] = useState("espresso");
   const [searchQuery, setSearchQuery] = useState("");
-  const [volumeSize, setVolumeSize] = useState("M"); // S, M, L
-  const [shots, setShots] = useState(2);
+  const [quantity, setQuantity] = useState(1);
   const [timeOption, setTimeOption] = useState("now"); // 'now', 'custom'
 
   const getTenMinutesAgoTime = () => {
@@ -1298,44 +1297,30 @@ function CaffeineModal({ onClose, onSave }) {
     {
       id: "espresso",
       name: "Espresso",
+      range: "60-80 mg",
+      caffeine: 70, // midpoint
       icon: "☕",
-      baseCaffeine: 75,
-      desc: "Espresso Arabica Blend",
     },
     {
-      id: "americano",
-      name: "Americano",
-      icon: "🥤",
-      baseCaffeine: 60,
-      desc: "Classic Hot/Ice Americano",
-    },
-    {
-      id: "matcha",
-      name: "Matcha",
-      icon: "🍵",
-      baseCaffeine: 50,
-      desc: "Premium Ceremonial Latte",
+      id: "instan",
+      name: "Kopi Instan",
+      range: "60-100 mg",
+      caffeine: 80, // midpoint
+      icon: "☕",
     },
     {
       id: "latte",
-      name: "Latte",
+      name: "Latte/Cappucino",
+      range: "60-125 mg",
+      caffeine: 92, // midpoint
       icon: "🥛",
-      baseCaffeine: 55,
-      desc: "Creamy Milk Coffee Latte",
     },
     {
-      id: "energy",
-      name: "Energy",
-      icon: "⚡",
-      baseCaffeine: 80,
-      desc: "Taurine Energy Boost",
-    },
-    {
-      id: "tea",
-      name: "Tea",
-      icon: "🍃",
-      baseCaffeine: 30,
-      desc: "Organic Herbal Green Tea",
+      id: "coldbrew",
+      name: "Cold Brew",
+      range: "100-200 mg",
+      caffeine: 150, // midpoint
+      icon: "🧊",
     },
   ];
 
@@ -1343,23 +1328,15 @@ function CaffeineModal({ onClose, onSave }) {
   const filteredBeverages = beverages.filter(
     (b) =>
       b.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.desc.toLowerCase().includes(searchQuery.toLowerCase()),
+      b.range.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Dynamic caffeine calculation
   const calculatedCaffeine = useMemo(() => {
     const selected =
       beverages.find((b) => b.id === selectedDrink) || beverages[0];
-    const sizeMultiplier =
-      volumeSize === "S" ? 0.7 : volumeSize === "L" ? 1.3 : 1.0;
-    // For espresso, shots directly scale it. For others, shots act as extra boosters.
-    const shotFactor =
-      selected.id === "espresso" ? shots / 2 : 1 + (shots - 2) * 0.3;
-    return Math.round(selected.baseCaffeine * 2 * sizeMultiplier * shotFactor);
-  }, [selectedDrink, volumeSize, shots]);
-
-  // Sleep Impact delay (minutes)
-  const sleepImpactMin = Math.round(calculatedCaffeine * 0.3);
+    return selected.caffeine * quantity;
+  }, [selectedDrink, quantity]);
 
   const handleSave = () => {
     onSave(calculatedCaffeine);
@@ -1382,9 +1359,9 @@ function CaffeineModal({ onClose, onSave }) {
     >
       <div
         style={{
-          background: "#fcf9f8",
+          background: "#fff",
           border: "1px solid #d4c3ba",
-          borderRadius: "12px",
+          borderRadius: "16px",
           width: "100%",
           maxWidth: "600px",
           maxHeight: "95vh",
@@ -1398,8 +1375,9 @@ function CaffeineModal({ onClose, onSave }) {
         {/* Header */}
         <div
           style={{
-            borderBottom: "1px solid #d4c3ba",
-            padding: "16px 24px",
+            borderBottom: "1px solid #eae5e2",
+            background: "#fbf9f7",
+            padding: "18px 24px",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -1418,7 +1396,7 @@ function CaffeineModal({ onClose, onSave }) {
           <button
             onClick={onClose}
             style={{
-              background: "#f0eded",
+              background: "#f5f3f1",
               border: "none",
               borderRadius: "50%",
               width: "32px",
@@ -1429,6 +1407,7 @@ function CaffeineModal({ onClose, onSave }) {
               cursor: "pointer",
             }}
             className="hover:opacity-85"
+            aria-label="Tutup"
           >
             <IconClose />
           </button>
@@ -1449,7 +1428,7 @@ function CaffeineModal({ onClose, onSave }) {
             <div className="d-flex justify-content-between align-items-center">
               <span
                 style={{
-                  fontSize: "12px",
+                  fontSize: "12.5px",
                   fontWeight: "700",
                   color: "#50453e",
                   letterSpacing: "0.6px",
@@ -1463,7 +1442,7 @@ function CaffeineModal({ onClose, onSave }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
-                  background: "#f6f3f2",
+                  background: "#fcf9f8",
                   border: "1px solid #d4c3ba",
                   borderRadius: "9999px",
                   padding: "6px 14px",
@@ -1475,43 +1454,74 @@ function CaffeineModal({ onClose, onSave }) {
             </div>
 
             {/* Grid of beverages */}
-            <div className="row g-2">
+            <div className="row g-3">
               {filteredBeverages.map((b) => {
                 const isActive = b.id === selectedDrink;
                 return (
-                  <div key={b.id} className="col-4">
+                  <div key={b.id} className="col-6">
                     <button
+                      type="button"
                       onClick={() => setSelectedDrink(b.id)}
                       style={{
                         width: "100%",
-                        padding: "12px 8px",
-                        borderRadius: "12px",
-                        background: isActive ? "#e4e2e1" : "#fcf9f8",
+                        padding: "16px",
+                        borderRadius: "16px",
+                        background: isActive ? "#f4ece7" : "#fff",
                         border: isActive
                           ? "2px solid #553722"
-                          : "1.5px solid #d4c3ba",
+                          : "1.5px solid #eae5e2",
                         boxShadow: isActive
                           ? "0 0 0 2px #fff, 0 0 0 4px #553722"
                           : "none",
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
                         alignItems: "center",
-                        gap: "6px",
+                        gap: "16px",
                         cursor: "pointer",
-                        transition: "all 0.15s",
+                        transition: "all 0.15s ease",
+                        textAlign: "left",
                       }}
                       className="hover-lift"
                     >
-                      <span style={{ fontSize: "28px" }}>{b.icon}</span>
-                      <span
+                      <div
                         style={{
-                          fontSize: "13px",
-                          fontWeight: "700",
-                          color: "#553722",
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "50%",
+                          background:
+                            b.id === "coldbrew"
+                              ? "rgba(14, 165, 233, 0.1)"
+                              : "rgba(85, 55, 34, 0.1)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "24px",
+                          flexShrink: 0,
                         }}
                       >
-                        {b.name}
-                      </span>
+                        {b.icon}
+                      </div>
+                      <div>
+                        <div
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "700",
+                            color: "#271310",
+                          }}
+                        >
+                          {b.name}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "13px",
+                            fontWeight: "500",
+                            color: "#655d5a",
+                            marginTop: "2px",
+                          }}
+                        >
+                          {b.range}
+                        </div>
+                      </div>
                     </button>
                   </div>
                 );
@@ -1519,193 +1529,100 @@ function CaffeineModal({ onClose, onSave }) {
             </div>
           </div>
 
-          {/* Section 2: Size & Strength Customizers */}
-          <div className="row g-3">
-            {/* Size Selector */}
-            <div className="col-12 col-md-6 d-flex flex-column gap-2">
-              <span
-                style={{
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  color: "#50453e",
-                  letterSpacing: "0.6px",
-                }}
-              >
-                UKURAN (VOLUME)
-              </span>
+          {/* Section 2: Counter */}
+          <div className="d-flex flex-column gap-2">
+            <span
+              style={{
+                fontSize: "12.5px",
+                fontWeight: "700",
+                color: "#50453e",
+                letterSpacing: "0.6px",
+              }}
+            >
+              FREKUENSI KONSUMSI HARIAN
+            </span>
 
-              <div
+            <div
+              style={{
+                background: "#fcf9f8",
+                border: "1px solid #eae5e2",
+                borderRadius: "16px",
+                padding: "12px 24px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                maxWidth: "380px",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 style={{
-                  background: "#f6f3f2",
+                  background: "#fff",
                   border: "1px solid #d4c3ba",
-                  borderRadius: "8px",
-                  padding: "4px",
+                  borderRadius: "50%",
+                  width: "42px",
+                  height: "42px",
                   display: "flex",
-                  gap: "4px",
-                }}
-              >
-                {["S", "M", "L"].map((size) => {
-                  const isActive = volumeSize === size;
-                  const label =
-                    size === "S"
-                      ? "S (30ml)"
-                      : size === "M"
-                        ? "M (60ml)"
-                        : "L (90ml)";
-                  return (
-                    <button
-                      key={size}
-                      onClick={() => setVolumeSize(size)}
-                      style={{
-                        flex: 1,
-                        padding: "8px 4px",
-                        border: "none",
-                        borderRadius: "4px",
-                        background: isActive ? "#fff" : "transparent",
-                        color: isActive ? "#553722" : "#50453e",
-                        fontWeight: isActive ? "700" : "500",
-                        fontSize: "12px",
-                        cursor: "pointer",
-                        boxShadow: isActive
-                          ? "0px 1px 1px rgba(0,0,0,0.05)"
-                          : "none",
-                        transition: "background 0.15s",
-                      }}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Volume scale visual slider */}
-              <div
-                style={{
-                  marginTop: "8px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "4px",
-                }}
-              >
-                <div
-                  style={{
-                    background: "#d4c3ba",
-                    height: "6px",
-                    borderRadius: "9999px",
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    style={{
-                      background: "#553722",
-                      height: "100%",
-                      width:
-                        volumeSize === "S"
-                          ? "15%"
-                          : volumeSize === "M"
-                            ? "50%"
-                            : "85%",
-                      borderRadius: "9999px",
-                      transition: "width 0.2s ease",
-                    }}
-                  />
-                </div>
-                <div
-                  className="d-flex justify-content-between text-muted"
-                  style={{ fontSize: "10px", fontWeight: "600" }}
-                >
-                  <span>30ml</span>
-                  <span>Double Shot</span>
-                  <span>150ml</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Strength Customizer */}
-            <div className="col-12 col-md-6 d-flex flex-column gap-2">
-              <span
-                style={{
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  color: "#50453e",
-                  letterSpacing: "0.6px",
-                }}
-              >
-                KEKUATAN (SHOTS)
-              </span>
-
-              <div
-                style={{
-                  background: "#f6f3f2",
-                  border: "1px solid #d4c3ba",
-                  borderRadius: "8px",
-                  padding: "10px 16px",
-                  display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  color: "#1b1c1c",
+                  cursor: "pointer",
+                }}
+                className="hover-lift"
+              >
+                -
+              </button>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: "12px",
                 }}
               >
-                <button
-                  onClick={() => setShots((s) => Math.max(1, s - 1))}
+                <span
                   style={{
-                    background: "#fff",
-                    border: "1px solid #d4c3ba",
-                    borderRadius: "50%",
-                    width: "36px",
-                    height: "36px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
+                    fontSize: "24px",
+                    fontWeight: "800",
+                    color: "#553722",
+                    lineHeight: 1,
                   }}
-                  className="hover:bg-gray-100"
                 >
-                  -
-                </button>
-                <div className="text-center">
-                  <span
-                    style={{
-                      fontSize: "22px",
-                      fontWeight: "700",
-                      color: "#553722",
-                      display: "block",
-                      lineHeight: 1,
-                    }}
-                  >
-                    {shots}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "11px",
-                      fontWeight: "600",
-                      color: "#50453e",
-                    }}
-                  >
-                    Espresso Shots
-                  </span>
-                </div>
-                <button
-                  onClick={() => setShots((s) => Math.min(5, s + 1))}
+                  {quantity}
+                </span>
+                <span
                   style={{
-                    background: "#fff",
-                    border: "1px solid #d4c3ba",
-                    borderRadius: "50%",
-                    width: "36px",
-                    height: "36px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#50453e",
                   }}
-                  className="hover:bg-gray-100"
                 >
-                  +
-                </button>
+                  cangkir / hari
+                </span>
               </div>
+              <button
+                type="button"
+                onClick={() => setQuantity((q) => Math.min(10, q + 1))}
+                style={{
+                  background: "#fff",
+                  border: "1px solid #d4c3ba",
+                  borderRadius: "50%",
+                  width: "42px",
+                  height: "42px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  color: "#1b1c1c",
+                  cursor: "pointer",
+                }}
+                className="hover-lift"
+              >
+                +
+              </button>
             </div>
           </div>
 
@@ -1713,7 +1630,7 @@ function CaffeineModal({ onClose, onSave }) {
           <div className="d-flex flex-column gap-2">
             <span
               style={{
-                fontSize: "12px",
+                fontSize: "12.5px",
                 fontWeight: "700",
                 color: "#50453e",
                 letterSpacing: "0.6px",
@@ -1721,40 +1638,43 @@ function CaffeineModal({ onClose, onSave }) {
             >
               WAKTU KONSUMSI
             </span>
-            <div className="row g-2">
-              <div className="col-12 col-sm-6">
+            <div className="row g-3">
+              <div className="col-6">
                 <button
+                  type="button"
                   onClick={() => setTimeOption("now")}
                   style={{
                     width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
+                    padding: "16px",
+                    borderRadius: "16px",
                     background:
                       timeOption === "now"
-                        ? "rgba(160,243,153,0.1)"
-                        : "#f6f3f2",
+                        ? "rgba(27,109,36,0.05)"
+                        : "#fff",
                     border:
                       timeOption === "now"
                         ? "1.5px solid #1b6d24"
-                        : "1px solid #d4c3ba",
+                        : "1.5px solid #eae5e2",
                     display: "flex",
                     alignItems: "center",
-                    gap: "10px",
+                    gap: "12px",
                     cursor: "pointer",
                     textAlign: "left",
-                    minHeight: "62px",
+                    minHeight: "68px",
                     boxSizing: "border-box",
                   }}
+                  className="hover-lift"
                 >
                   <div
                     style={{
-                      background: timeOption === "now" ? "#1b6d24" : "#fff",
+                      background:
+                        timeOption === "now" ? "#1b6d24" : "#fff",
                       border:
                         timeOption === "now"
                           ? "2px solid #1b6d24"
                           : "2px solid #82746d",
-                      width: "16px",
-                      height: "16px",
+                      width: "18px",
+                      height: "18px",
                       borderRadius: "50%",
                       display: "flex",
                       alignItems: "center",
@@ -1776,7 +1696,7 @@ function CaffeineModal({ onClose, onSave }) {
                   <div>
                     <div
                       style={{
-                        fontSize: "13px",
+                        fontSize: "15px",
                         fontWeight: "700",
                         color: timeOption === "now" ? "#1b6d24" : "#50453e",
                       }}
@@ -1785,9 +1705,10 @@ function CaffeineModal({ onClose, onSave }) {
                     </div>
                     <div
                       style={{
-                        fontSize: "11px",
+                        fontSize: "12px",
                         color: timeOption === "now" ? "#1b6d24" : "#82746d",
                         fontWeight: "500",
+                        marginTop: "2px",
                       }}
                     >
                       Baru saja diminum
@@ -1796,39 +1717,42 @@ function CaffeineModal({ onClose, onSave }) {
                 </button>
               </div>
 
-              <div className="col-12 col-sm-6">
+              <div className="col-6">
                 <button
+                  type="button"
                   onClick={() => setTimeOption("custom")}
                   style={{
                     width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
+                    padding: "16px",
+                    borderRadius: "16px",
                     background:
                       timeOption === "custom"
-                        ? "rgba(160,243,153,0.1)"
-                        : "#f6f3f2",
+                        ? "rgba(27,109,36,0.05)"
+                        : "#fff",
                     border:
                       timeOption === "custom"
                         ? "1.5px solid #1b6d24"
-                        : "1px solid #d4c3ba",
+                        : "1.5px solid #eae5e2",
                     display: "flex",
                     alignItems: "center",
-                    gap: "10px",
+                    gap: "12px",
                     cursor: "pointer",
                     textAlign: "left",
-                    minHeight: "62px",
+                    minHeight: "68px",
                     boxSizing: "border-box",
                   }}
+                  className="hover-lift"
                 >
                   <div
                     style={{
-                      background: timeOption === "custom" ? "#1b6d24" : "#fff",
+                      background:
+                        timeOption === "custom" ? "#1b6d24" : "#fff",
                       border:
                         timeOption === "custom"
                           ? "2px solid #1b6d24"
                           : "2px solid #82746d",
-                      width: "16px",
-                      height: "16px",
+                      width: "18px",
+                      height: "18px",
                       borderRadius: "50%",
                       display: "flex",
                       alignItems: "center",
@@ -1852,13 +1776,13 @@ function CaffeineModal({ onClose, onSave }) {
                       flex: 1,
                       display: "flex",
                       flexDirection: "column",
-                      gap: "2px",
+                      justifyContent: "center",
                     }}
                   >
                     <div
                       style={{
-                        fontSize: "13px",
-                        fontWeight: timeOption === "custom" ? "700" : "500",
+                        fontSize: "15px",
+                        fontWeight: "700",
                         color: timeOption === "custom" ? "#1b6d24" : "#50453e",
                       }}
                     >
@@ -1881,16 +1805,17 @@ function CaffeineModal({ onClose, onSave }) {
                           outline: "none",
                           width: "100%",
                           boxSizing: "border-box",
-                          marginTop: "2px",
+                          marginTop: "4px",
                           cursor: "pointer",
                         }}
                       />
                     ) : (
                       <div
                         style={{
-                          fontSize: "11px",
+                          fontSize: "12px",
                           color: "#82746d",
                           fontWeight: "500",
+                          marginTop: "2px",
                         }}
                       >
                         10 Menit yang lalu
@@ -1901,139 +1826,30 @@ function CaffeineModal({ onClose, onSave }) {
               </div>
             </div>
           </div>
-
-          {/* Section 4: Dynamic Metrics Preview */}
-          <div
-            style={{
-              background: "#f0eded",
-              border: "1px solid rgba(212,195,186,0.5)",
-              borderRadius: "12px",
-              padding: "20px",
-              display: "flex",
-              justifyContent: "space-between",
-              gap: "16px",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            {/* Background design graphic */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                width: "90px",
-                height: "90px",
-                background:
-                  "linear-gradient(135deg, rgba(85,55,34,0.05), transparent)",
-                borderRadius: "0 0 0 100%",
-              }}
-            />
-
-            {/* Estimasi Kafein */}
-            <div className="flex-1 d-flex flex-column gap-1">
-              <span
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "700",
-                  color: "#50453e",
-                  letterSpacing: "0.6px",
-                }}
-              >
-                ESTIMASI KAFEIN
-              </span>
-              <div className="d-flex align-items-baseline gap-1">
-                <span
-                  style={{
-                    fontSize: "28px",
-                    fontWeight: "700",
-                    color: "#553722",
-                    lineHeight: 1,
-                  }}
-                >
-                  {calculatedCaffeine}
-                </span>
-                <span
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "500",
-                    color: "#553722",
-                  }}
-                >
-                  mg
-                </span>
-              </div>
-            </div>
-
-            {/* Dampak Tidur */}
-            <div className="flex-1 d-flex flex-column gap-1">
-              <span
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "700",
-                  color: "#50453e",
-                  letterSpacing: "0.6px",
-                }}
-              >
-                DAMPAK TIDUR
-              </span>
-              <div className="d-flex align-items-center gap-2">
-                <span
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#1b1c1c",
-                  }}
-                >
-                  -{sleepImpactMin}mnt
-                </span>
-                <span
-                  style={{
-                    background: "#fef3c7",
-                    border: "1px solid #fde68a",
-                    borderRadius: "9999px",
-                    padding: "2px 8px",
-                    fontSize: "10px",
-                    color: "#92400e",
-                    fontWeight: "600",
-                  }}
-                >
-                  {sleepImpactMin > 60
-                    ? "High"
-                    : sleepImpactMin > 30
-                      ? "Moderate"
-                      : "Low"}
-                </span>
-              </div>
-              <span
-                style={{ fontSize: "10px", color: "#50453e", marginTop: "2px" }}
-              >
-                Waktu paruh diperkirakan hingga 22:30.
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Footer Actions */}
         <div
           style={{
-            background: "#f6f3f2",
-            borderTop: "1px solid #d4c3ba",
+            background: "#fcf9f8",
+            borderTop: "1px solid #eae5e2",
             padding: "16px 24px",
             display: "flex",
             justifyContent: "flex-end",
-            gap: "12px",
+            alignItems: "center",
+            gap: "16px",
           }}
         >
           <button
+            type="button"
             onClick={onClose}
             style={{
               background: "transparent",
               border: "none",
               color: "#50453e",
               padding: "10px 24px",
-              fontSize: "14px",
-              fontWeight: "500",
+              fontSize: "15px",
+              fontWeight: "600",
               cursor: "pointer",
             }}
             className="hover:text-black"
@@ -2042,19 +1858,20 @@ function CaffeineModal({ onClose, onSave }) {
           </button>
 
           <button
+            type="button"
             onClick={handleSave}
             style={{
               background: "#553722",
               color: "#fff",
               border: "none",
-              borderRadius: "8px",
-              padding: "10px 48px",
-              fontSize: "14px",
+              borderRadius: "12px",
+              padding: "12px 36px",
+              fontSize: "15px",
               fontWeight: "600",
               cursor: "pointer",
               boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)",
             }}
-            className="hover:opacity-90"
+            className="hover:opacity-90 hover-lift"
           >
             Simpan & Analisis
           </button>

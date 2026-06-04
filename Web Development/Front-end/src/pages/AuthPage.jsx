@@ -123,7 +123,7 @@ export default function AuthPage() {
               className="fw-bold tracking-tight text-[#9ee86f] text-4xl lg:text-5xl mt-4"
               style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
-              ScansCaffeine
+              KopiMetric
             </h1>
           </div>
 
@@ -151,7 +151,7 @@ export default function AuthPage() {
           {/* Mobile branding logo */}
           <div className="w-full max-w-[440px] md:hidden flex justify-center items-center mb-4 mt-2">
             <span className="fs-4 fw-bold text-[#1b6d24] tracking-tight">
-              ScansCoffee
+              KopiMetric
             </span>
           </div>
 
