@@ -814,6 +814,7 @@ function PageContent({
   );
 
   const caffeineFromInput = Number(result.input?.caffeineMg || 0);
+  const primaryCoffeeType = (result.input?.coffeeType || "").toLowerCase();
 
   const detectedSources = coffeeInfo
     ? [
@@ -825,6 +826,7 @@ function PageContent({
           bg: coffeeInfo.bg,
           border: coffeeInfo.border,
           icon: coffeeInfo.icon,
+          isPrimary: true,
         },
       ]
     : [
@@ -836,6 +838,7 @@ function PageContent({
           bg: "rgba(85,55,34,0.1)",
           border: "rgba(85,55,34,0.2)",
           icon: "☕",
+          isPrimary: true,
         },
       ];
 
@@ -1448,6 +1451,13 @@ function PageContent({
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           {loggedDrinks.map(({ name, color, bg, border, icon, count }) => {
             const label = count > 1 ? `${name} (${count} cangkir)` : name;
+            const primaryTokens = primaryCoffeeType
+              .split(/[\s\/\-]+/)
+              .filter(Boolean);
+            const matchPrimary = primaryTokens.some((token) =>
+              name.toLowerCase().includes(token),
+            );
+            const activeBorder = hoveredBar !== null && matchPrimary;
             return (
               <div
                 key={name}
@@ -1456,12 +1466,13 @@ function PageContent({
                   alignItems: "center",
                   gap: "6px",
                   background: bg,
-                  border: `1px solid ${border}`,
+                  border: `1px solid ${activeBorder ? "#553722" : border}`,
                   borderRadius: "9999px",
                   padding: "5px 14px",
                   fontSize: "14px",
                   color,
                   cursor: "default",
+                  transition: "border-color 0.2s ease",
                 }}
               >
                 <span>{icon}</span>
