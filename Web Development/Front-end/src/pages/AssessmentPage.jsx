@@ -14,9 +14,24 @@ const coffeeTypeOptions = [
 ];
 
 const activityOptions = [
-  { key: "Sedentary", label: "SEDENTARY", sublabel: "<1 Jam/Minggu", icon: "🪑" },
-  { key: "Lightly Active", label: "LIGHTLY ACTIVE", sublabel: "1-3 Jam/Minggu", icon: "🚶" },
-  { key: "Very Active", label: "VERY ACTIVE", sublabel: "4-8 Jam/Minggu", icon: "🏃" },
+  {
+    key: "Sedentary",
+    label: "SEDENTARY",
+    sublabel: "<1 Jam/Minggu",
+    icon: "🪑",
+  },
+  {
+    key: "Lightly Active",
+    label: "LIGHTLY ACTIVE",
+    sublabel: "1-3 Jam/Minggu",
+    icon: "🚶",
+  },
+  {
+    key: "Very Active",
+    label: "VERY ACTIVE",
+    sublabel: "4-8 Jam/Minggu",
+    icon: "🏃",
+  },
   { key: "Athlete", label: "ATHLETE", sublabel: ">8 Jam/Minggu", icon: "⚡" },
 ];
 
@@ -106,32 +121,61 @@ export default function AssessmentPage() {
 
   const handleConfirmSubmit = async () => {
     setShowConfirmModal(false);
+
+    if (!pendingData) {
+      alert("Data assessment belum tersedia. Silakan isi ulang form.");
+      return;
+    }
+
+    // Cek status login dari Zustand dan localStorage
+    const isLoggedIn =
+      useAuthStore.getState().isLoggedIn ||
+      Boolean(localStorage.getItem("token"));
+
+    // Jika belum login, jangan panggil API prediksi dulu
+    if (!isLoggedIn) {
+      sessionStorage.setItem("pendingAssessment", JSON.stringify(pendingData));
+
+      navigate("/login", {
+        state: {
+          message:
+            "Silakan login terlebih dahulu untuk melihat hasil analisis.",
+          redirectAfterLogin: "/assessment",
+        },
+      });
+
+      return;
+    }
+
     setIsSubmitting(true);
 
-    // Cek status login dari Zustand
-    const isLoggedIn = useAuthStore.getState().isLoggedIn;
-
     try {
-      if (!isLoggedIn) {
-        // ── OPSI B: belum login → simpan form ke sessionStorage, redirect ke register ──
-        sessionStorage.setItem(
-          "pendingAssessment",
-          JSON.stringify(pendingData),
-        );
-        navigate("/register");
-        return;
-      }
-
-      // ── Sudah login → langsung kirim ke backend ──
       const response = await predictionService.create(pendingData);
 
-      // Navigate ke ResultPage dengan data hasil
-      navigate("/result", { state: { result: response.data } });
+      const resultWithUserInput = {
+        ...response.data,
+        input: {
+          ...response.data.input,
+          coffeeType: pendingData.coffeeType,
+          dailyCups: Number(pendingData.dailyCups),
+          lastConsumptionTime: pendingData.lastConsumptionTime,
+        },
+      };
+
+      navigate("/result", {
+        state: {
+          result: resultWithUserInput,
+        },
+      });
     } catch (error) {
       console.error("Submission Error:", error);
+
       const message =
         error.response?.data?.message ||
+        error.response?.data?.errors?.errors?.join("\n") ||
+        error.message ||
         "Gagal mengirim data. Silakan coba lagi.";
+
       alert(message);
     } finally {
       setIsSubmitting(false);
@@ -500,7 +544,11 @@ export default function AssessmentPage() {
                           <input
                             type="time"
                             className="form-control border border-[#e5e7eb] rounded-3 text-dark"
-                            style={{ fontSize: "16px", height: "46px", background: "#ffffff" }}
+                            style={{
+                              fontSize: "16px",
+                              height: "46px",
+                              background: "#ffffff",
+                            }}
                             {...register("lastConsumptionTime")}
                           />
                         </div>
@@ -538,7 +586,7 @@ export default function AssessmentPage() {
                                     height: "48px",
                                     display: "flex",
                                     alignItems: "center",
-                                    justifyContent: "center"
+                                    justifyContent: "center",
                                   }}
                                 >
                                   {opt.label}
@@ -663,41 +711,52 @@ export default function AssessmentPage() {
                           Tingkat Aktivitas Fisik
                         </label>
                         <div className="row g-2">
-                          {activityOptions.map(({ key, label, sublabel, icon }) => {
-                            const isActive = selectedActivityLevel === key;
-                            return (
-                              <div key={key} className="col-6 col-md-3">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setValue("activityLevel", key, {
-                                      shouldValidate: true,
-                                    })
-                                  }
-                                  className={`btn w-100 d-flex flex-column align-items-center justify-content-center gap-1 border-2 transition-all ${
-                                    isActive
-                                      ? "border-[#1b6d24] bg-[#d1e7dd] text-[#1b6d24]"
-                                      : "bg-white border-[#e5e7eb] text-[#374151] hover:bg-gray-50"
-                                  }`}
-                                  style={{
-                                    borderRadius: "12px",
-                                    padding: "24px 12px",
-                                    transition: "all 0.2s ease",
-                                  }}
-                                >
-                                  <span className="mb-1" style={{ fontSize: "24px" }}>
-                                    {icon}
-                                  </span>
-                                  <span className="fw-bold tracking-wide" style={{ fontSize: "12.5px" }}>
-                                    {label}
-                                  </span>
-                                  <span className="text-[#82746d]" style={{ fontSize: "11px" }}>
-                                    {sublabel}
-                                  </span>
-                                </button>
-                              </div>
-                            );
-                          })}
+                          {activityOptions.map(
+                            ({ key, label, sublabel, icon }) => {
+                              const isActive = selectedActivityLevel === key;
+                              return (
+                                <div key={key} className="col-6 col-md-3">
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setValue("activityLevel", key, {
+                                        shouldValidate: true,
+                                      })
+                                    }
+                                    className={`btn w-100 d-flex flex-column align-items-center justify-content-center gap-1 border-2 transition-all ${
+                                      isActive
+                                        ? "border-[#1b6d24] bg-[#d1e7dd] text-[#1b6d24]"
+                                        : "bg-white border-[#e5e7eb] text-[#374151] hover:bg-gray-50"
+                                    }`}
+                                    style={{
+                                      borderRadius: "12px",
+                                      padding: "24px 12px",
+                                      transition: "all 0.2s ease",
+                                    }}
+                                  >
+                                    <span
+                                      className="mb-1"
+                                      style={{ fontSize: "24px" }}
+                                    >
+                                      {icon}
+                                    </span>
+                                    <span
+                                      className="fw-bold tracking-wide"
+                                      style={{ fontSize: "12.5px" }}
+                                    >
+                                      {label}
+                                    </span>
+                                    <span
+                                      className="text-[#82746d]"
+                                      style={{ fontSize: "11px" }}
+                                    >
+                                      {sublabel}
+                                    </span>
+                                  </button>
+                                </div>
+                              );
+                            },
+                          )}
                         </div>
                         <input
                           type="hidden"
@@ -727,7 +786,9 @@ export default function AssessmentPage() {
                         </label>
                         <div className="d-flex flex-column w-100">
                           <div className="d-flex align-items-center gap-3">
-                            <span style={{ fontSize: "24px", flexShrink: 0 }}>😊</span>
+                            <span style={{ fontSize: "24px", flexShrink: 0 }}>
+                              😊
+                            </span>
                             <div className="flex-grow-1">
                               <input
                                 type="range"
@@ -779,7 +840,9 @@ export default function AssessmentPage() {
                                 </span>
                               </div>
                             </div>
-                            <span style={{ fontSize: "24px", flexShrink: 0 }}>😰</span>
+                            <span style={{ fontSize: "24px", flexShrink: 0 }}>
+                              😰
+                            </span>
                           </div>
                         </div>
                       </div>
