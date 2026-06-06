@@ -296,12 +296,31 @@ const COFFEE_INFO = {
 
 const getTodayLabel = () => DAY_LABELS[new Date().getDay()];
 
-const buildWeeklyBarData = (currentMg, referenceDate = new Date()) => {
-  const todayIndex = new Date(referenceDate).getDay(); // 0 = Minggu, 1 = Senin
+const buildWeeklyBarData = (
+  historyItems = [],
+  currentMg,
+  referenceDate = new Date(),
+) => {
+  const totals = DAY_LABELS.reduce((acc, day) => {
+    acc[day] = 0;
+    return acc;
+  }, {});
+
+  historyItems.forEach((item) => {
+    const timestamp =
+      item.createdAt || item.date || item.created_at || Date.now();
+    const dayName = DAY_LABELS[new Date(timestamp).getDay()];
+    totals[dayName] += Number(item.caffeineMg ?? item.caffeine ?? 0);
+  });
+
+  const activeIndex = new Date(referenceDate).getDay();
   return DAY_LABELS.map((day, index) => ({
     day,
-    mg: index === todayIndex ? Number(currentMg || 0) : 0,
-    active: index === todayIndex,
+    mg:
+      index === activeIndex
+        ? Math.max(totals[day] || 0, Number(currentMg || 0))
+        : totals[day] || 0,
+    active: index === activeIndex,
   }));
 };
 
@@ -319,6 +338,7 @@ export default function ResultPage() {
   const [sleep, setSleep] = useState(65);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [extraCaffeine, setExtraCaffeine] = useState(0); // tambahan dari modal "Catat Konsumsi"
+  const [weeklyHistory, setWeeklyHistory] = useState([]);
   const [loggedDrinks, setLoggedDrinks] = useState([
     {
       id: "espresso_double",
@@ -428,7 +448,9 @@ export default function ResultPage() {
     const fetchLatest = async () => {
       try {
         const response = await predictionService.getAll();
-        const items = response.data?.items || [];
+        const items = Array.isArray(response)
+          ? response
+          : response.items || response.data?.items || response.data || [];
         if (items.length === 0) {
           navigate("/assessment", { replace: true });
           return;
@@ -465,6 +487,24 @@ export default function ResultPage() {
 
     fetchLatest();
   }, [isLoggedIn, location.state, navigate]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    const fetchWeeklyHistory = async () => {
+      try {
+        const response = await predictionService.getAll("7d");
+        const items = Array.isArray(response)
+          ? response
+          : response.items || response.data?.items || response.data || [];
+        setWeeklyHistory(items);
+      } catch (e) {
+        console.error("Failed to fetch weekly history:", e);
+      }
+    };
+
+    fetchWeeklyHistory();
+  }, [isLoggedIn]);
 
   // Loading state
   if (loading) {
@@ -798,8 +838,12 @@ function PageContent({
       ];
 
   const weeklyBarData = useMemo(() => {
-    return buildWeeklyBarData(totalCaffeine, result.createdAt || new Date());
-  }, [totalCaffeine, result.createdAt]);
+    return buildWeeklyBarData(
+      weeklyHistory,
+      totalCaffeine,
+      result.createdAt || new Date(),
+    );
+  }, [weeklyHistory, totalCaffeine, result.createdAt]);
 
   const weeklyMaxMg = Math.max(...weeklyBarData.map((d) => d.mg), 1);
 
