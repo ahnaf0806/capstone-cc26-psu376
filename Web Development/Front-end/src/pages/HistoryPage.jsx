@@ -362,6 +362,7 @@ export default function HistoryPage() {
       state: {
         result: {
           id: p.id,
+          createdAt: p.createdAt,
           input: {
             age: p.age,
             gender: p.gender,
@@ -532,7 +533,7 @@ export default function HistoryPage() {
                 flexShrink: 0,
               }}
             >
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
+              {user?.name?.charAt(0).toUpperCase() || "U"}
             </div>
             <div>
               <div
@@ -542,7 +543,7 @@ export default function HistoryPage() {
                   color: "#1b1c1c",
                 }}
               >
-                {user?.name || 'User'}
+                {user?.name || "User"}
               </div>
               <Link
                 to="/profile"

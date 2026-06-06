@@ -296,8 +296,8 @@ const COFFEE_INFO = {
 
 const getTodayLabel = () => DAY_LABELS[new Date().getDay()];
 
-const buildWeeklyBarData = (currentMg) => {
-  const todayIndex = new Date().getDay(); // 0 = Minggu, 1 = Senin
+const buildWeeklyBarData = (currentMg, referenceDate = new Date()) => {
+  const todayIndex = new Date(referenceDate).getDay(); // 0 = Minggu, 1 = Senin
   return DAY_LABELS.map((day, index) => ({
     day,
     mg: index === todayIndex ? Number(currentMg || 0) : 0,
@@ -436,6 +436,7 @@ export default function ResultPage() {
         const latest = items[0];
         setResult({
           id: latest.id,
+          createdAt: latest.createdAt,
           input: {
             age: latest.age,
             gender: latest.gender,
@@ -797,8 +798,8 @@ function PageContent({
       ];
 
   const weeklyBarData = useMemo(() => {
-    return buildWeeklyBarData(totalCaffeine);
-  }, [totalCaffeine]);
+    return buildWeeklyBarData(totalCaffeine, result.createdAt || new Date());
+  }, [totalCaffeine, result.createdAt]);
 
   const weeklyMaxMg = Math.max(...weeklyBarData.map((d) => d.mg), 1);
 
