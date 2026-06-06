@@ -721,6 +721,7 @@ export default function ResultPage() {
               totalCaffeine={totalCaffeine}
               setIsModalOpen={setIsModalOpen}
               loggedDrinks={loggedDrinks}
+              weeklyHistory={weeklyHistory}
             />
           </main>
         </div>
@@ -792,6 +793,7 @@ function PageContent({
   totalCaffeine,
   setIsModalOpen,
   loggedDrinks,
+  weeklyHistory,
 }) {
   // Derived UI labels (yang dulu di parent, dipindah sini supaya update saat slider bergerak)
   const hydrationVal = (1.5 + (hydration / 100) * 2.5).toFixed(1);
