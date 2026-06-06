@@ -1194,7 +1194,7 @@ function PageContent({
                       width: "100%",
                       height:
                         d.mg > 0 ? `${(d.mg / weeklyMaxMg) * 200}px` : "20px",
-                      background: d.active ? "#553722" : "#f6f3f2",
+                      background: hoveredBar === i ? "#553722" : "#f6f3f2",
                       borderRadius: "6px 6px 0 0",
                       transition: "background 0.2s",
                       minHeight: "20px",
@@ -1458,6 +1458,11 @@ function PageContent({
               name.toLowerCase().includes(token),
             );
             const activeBorder = hoveredBar !== null && matchPrimary;
+            const borderColor = activeBorder ? "#1b6d24" : "#553722";
+            const textColor = activeBorder ? "#1b6d24" : "#553722";
+            const chipBg = activeBorder
+              ? "rgba(27,109,36,0.12)"
+              : "rgba(85,55,34,0.08)";
             return (
               <div
                 key={name}
@@ -1465,14 +1470,15 @@ function PageContent({
                   display: "flex",
                   alignItems: "center",
                   gap: "6px",
-                  background: bg,
-                  border: `1px solid ${activeBorder ? "#553722" : border}`,
+                  background: chipBg,
+                  border: `1px solid ${borderColor}`,
                   borderRadius: "9999px",
                   padding: "5px 14px",
                   fontSize: "14px",
-                  color,
+                  color: textColor,
                   cursor: "default",
-                  transition: "border-color 0.2s ease",
+                  transition:
+                    "border-color 0.2s ease, background 0.2s ease, color 0.2s ease",
                 }}
               >
                 <span>{icon}</span>
